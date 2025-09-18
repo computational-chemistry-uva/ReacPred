@@ -1,3 +1,9 @@
+**Authors:** Alexander A. Korotkevich, Noushine Shahidzadeh, Sander Woutersen, Zuzanna M. Czarnobil, Paul Tinnemans, Hugo Meekes, and Alberto
+Pérez de Alba Ortíz
+
+**Preprint:** https://doi.org/10.26434/chemrxiv-2025-1814n 
+
+
 # Data
 ## Data files
 The data is stored in the folder Data; there are folders **D1, D2, Dm** that correspond to the DFT generated data, experimental data and the merged dataset respectively in accordance with the definitions used in the article. Each of these folders contains three .csv files that corresponds three different fitnesses, e.g.:
