@@ -9,8 +9,11 @@ Pérez de Alba Ortíz
 The data is stored in the folder Data; there are folders D1, D2, Dm that correspond to the DFT generated data, experimental data and the merged dataset respectively in accordance with the definitions used in the article.  Each of these folders contains three .csv files that corresponds three different fitnesses, e.g.:
 
 d1_f_Ev.csv - fitness is volumetric energy density 
+
 d1_f_H.csv - fitness is hydration enthalpy
+
 d1_f_rho.csv - fitness is density
+
 
 The filenames start with d2 and with dm for D2 and Dm datasets respectively;
 In addition, D1 and Dm folders contain folder called ‘Folds’; this folder contains train and test folds used for 10-fold cross-validation for each of the fitnesses;  
@@ -21,11 +24,17 @@ If needed, an alternative split can be generated using the script create_folds.p
 
 ## Data format
 If it is needed to create a custom dataset, the .csv file must have a particular format
+
 Column 1: name - ‘idx’, values - integers; represents number of a data point
+
 Column 2: name - ‘Base salt’, values - strings; represents salt composition; 
+
 Column 3: name - ‘Initial loading’, values - float; represents amount of water in the initial hydrate
+
 Column 4: name - ‘Final loading’, values - float; represents amount of water molecules in the product hydrate
+
 Column 5: name - ‘Fitness’, values - float; represents the target value of the predicted property
+
 Column 6: name - ‘Origin’, values - optional; represents origin of the data; if this column is not present a dummy column will be created; else, the provided origins will be replaced by numeric values, the replacement rule will be printed
 
 
