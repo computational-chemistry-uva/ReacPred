@@ -86,9 +86,7 @@ args['train'] = bool - specifies whether the model has to be trained or not; if 
 
 args[‘evaluate’] = bool - specifies whether a model has to be evaluated on an independent data set and save results into the Results directory; the path to the test set can be provided (see input_parser); if not evaluates data on the validation set
 
-args['fine_tune'] = str - specifies path for the checkpoint of a pretrained model to CONTINUE TRAINING; checkpoints are saved in the models directory; it looks like /../models/roost_10_epochs/checkpoint-r0.pth.tar’; NOTE, if train is True, the model will be retrained, so if only evaluation on a test set is needed is needed, use args['train'] = False
-
-args[‘model’_name] = str - specifies the NAME of a directory containing the checkpoint of a pretrained. Used to select a pertained model for evaluation. Note, here the full path DOES NOT need to be specified; by default the search is done in the directory called models, so one need to specify only the name of a directory that contains the checkpoint e.g. 'ReacRoostE2_Ev' 
+args['fine_tune'] = bool - specifies path for the checkpoint of a pretrained model; checkpoints are saved in the models directory; it looks like /../models/roost_10_epochs/checkpoint-r0.pth.tar’; NOTE, if train is True, the model will be retrained, so if only evaluation on a test set is needed is needed, use args['train'] = False
 
 args['data_path'] = str - specifies path to data, by uses 0.8 of the data for training and 0.2 for validation/test if no test_path is provided
 
@@ -112,13 +110,15 @@ if False, in case model_class is ReacRoost AND append_after = ‘C’ elem_fea_l
 if False, in case model_class is ReacRoost AND append_after = ‘E’ elem_fea_len corresponds to the original embedding length, i.e. the dimension of feature used as input of final predictive model is elem_fea_len + 3 (two loadings + one atomic fraction (weight))
 
 # Running
-The tasks are run by calling main(**args) in the **workspace.py**.
-A single train/test split run or an evaluation of a preretrained on an independent test set is done by a single function call (see #Running a task on a single train/test split in **workspace.py**). The test results are saved in the Results directory.
+The tasks are run by calling main(**args) in the ***workspace.py***.
+A single train/test split run or an evaluation of a preretrained on an independent test set is done by a single function call (see #Running a task on a single train/test split in ***workspace.py***). The test results are saved in the Results directory.
+A k-fold cross-validation task is run in a loop of k iterations (see #Running a cross-validation task in ***workspace.py***). Before running, k train test splits of data must be created, which can be done using script ***create_folds.py***. The model parameters and the path to the directory with the splits (folds) are specified before looping. In the loop, the train/test splits and model names are alternated at each iteration and the results are saved in the Results folder. The results can be analysed using the ***analyse_CV.py*** script. NOTE the Results are not necessarily overwritten, so before analysing cross-validation results, make sure, the folder contains only the necessary files with the results.
 
-A k-fold cross-validation task is run in a loop of k iterations (see #Running a cross-validation task in **workspace.py**). Before running, k train test splits of data must be created, which can be done using script **create_folds.py**. The model parameters and the path to the directory with the splits (folds) are specified before looping. In the loop, the train/test splits and model names are alternated at each iteration and the results are saved in the Results folder. The results can be analysed using the **analyse_CV.py** script. NOTE the Results are not necessarily overwritten, so before analysing cross-validation results, make sure, the folder contains only the necessary files with the results.
-
-Evaluation of a pretrained model:
-In the current distribution, we provide 4 models pretrained on all the available data: ReacCryNet, ReacElemNet2, ReacRoostC6 and ReacRoostE2; Each model is stored in a corresponding folder in the directory called pretrained. To run the evaluation, open the desired folder, and then open the file called workspace.py, go the end of the file. Specify the path to the test_set, on which the model has to be tested args[‘test_path’] = ‘path_to_input’ , and run the script. As an example, a file called input.csv is provided. In the case of ReacCryNet, additionally, calculation of MagPie features has to be done for each composition in the test set, using create_magpie.py. For input.csv, the features are already calculated and stored in the file magpie_features_input.json. The path to the Magpie features also has to be specified args['fea_path'] = ‘path_to_features’
-
-Remarks
+# Remarks
 Make sure to comment/uncomment unnecessary parts: the workspace can run either a single train/test split task or a k-fold cross-validation. A prediction with a retrained model without training can be set up in the a single train/test split, by disabling training (args['train'] = False), providing paths to a checkpoint with a pre-trained model (args['fine_tune'] = ‘’path’) and to an independent test set (args[‘test_path’] = path)
+
+# Reference models and SHAP analysis
+To run cross-validation with classical machine learning models RFMagpie, SVMMagpie or RidgeMagpie OR SHAP analysis according to the text of the article, the script ‘run_models_or_shap.py’ can be used. The script runs from CLI, the —help of the script provides all the necessary details.
+
+# Mahalanobis analysis
+To reproduce the results on the Mahalanobis distance analysis of the experimentally validated salts as described in the article text, the script get_distances.py can be used. Note, that running this analysis requires dedicated embeddings, which are stored alongside the script. The script runs from CLI, the —help of the script provides all the necessary details.
