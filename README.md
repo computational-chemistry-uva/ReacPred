@@ -6,7 +6,7 @@ Pérez de Alba Ortíz
 
 # Data
 ## Data files
-The data is stored in the folder Data; there are folders **D1, D2, Dm** that correspond to the DFT generated data, experimental data and the merged dataset respectively in accordance with the definitions used in the article. Each of these folders contains three .csv files that corresponds three different fitnesses, e.g.:
+The data is stored in the folder Data; there are folders D1, D2, Dm that correspond to the DFT generated data, experimental data and the merged dataset respectively in accordance with the definitions used in the article.  Each of these folders contains three .csv files that corresponds three different fitnesses, e.g.:
 
 d1_f_Ev.csv - fitness is volumetric energy density 
 d1_f_H.csv - fitness is hydration enthalpy
@@ -15,7 +15,9 @@ d1_f_rho.csv - fitness is density
 The filenames start with d2 and with dm for D2 and Dm datasets respectively;
 In addition, D1 and Dm folders contain folder called ‘Folds’; this folder contains train and test folds used for 10-fold cross-validation for each of the fitnesses;  
 
-If needed, an alternative split can be generated using the script **create_folds.py** and one of the files with the data that needs to be split.
+The folder ‘compound-level split’ contains files with lists of unique salts present in D1 and Dm, as well as folds generated according to the description in the article text.
+
+If needed, an alternative split can be generated using the script create_folds.py and one of the files with the data that needs to be split.
 
 ## Data format
 If it is needed to create a custom dataset, the .csv file must have a particular format
@@ -33,9 +35,9 @@ Column 6: name - ‘Origin’, values - optional; represents origin of the data;
 
 # Embeddings
 The folder embeddings contains element embeddings as reported in the original Roost paper 
-(Goodall, R.E.A., Lee, A.A,  Nat Commun 11, 6280 (2020))
+(Goodall, R.E.A., Lee, A.A,  Nat Commun 11, 6280 (2020))
 Additionally, it contains Magpie features for data used for model training on Dm data (magpie_features.json);  this file can also be used to run tasks on the D1 data only 
-If MagPieNN (ReacCryNN) predictions/training is desired for some compositions that are not in that data, new Magpie features must be generated before running the model using the script **create_magpie.py**
+If **MagPieNN (ReacCryNN)** predictions/training is desired for some compositions that are not in that data, new Magpie features must be generated before running the model using the script **create_magpie.py**
 
 # (Quick) Setup
 1) Setup a Python environment. We recommend using Python 3.9.19, as this version has been used throughout the project 
@@ -43,18 +45,28 @@ If you use conda, create a new environment, and activate it in Terminal:
 conda create -n env_name python=3.9.19
 conda activate env_name
 
-2) Instal libraries - the libraries and their versions are saved in the requirements.txt.
+2) Install libraries - the libraries and their versions are saved in the requirements.txt.
 In conda, after creating and activating the environment, install requirements using pip
 pip install -r requirements.txt
-
-Sometimes torch_scatter does not install this way smoothly, so an alternative installation command can be used:
-pip install torch-scatter -f https://data.pyg.org/whl/torch-2.2.1+cpu.html
-(Here the +cpu can be replaced for CUDA)
 
 3) In your IDE open the file workspace.py, and run the code. If everything is set up right, this should start a single train/test split run using ReacRoostC on the d1 dataset, for getting the model predicting densities. 
 
 4) The prediction results will be saved in the folder results, and the model will be saved in the folder model
 
+## NOTE
+Installation of torch-scatter might be machine-dependent. 
+Specifically, we required running 
+pip install torch torchvision torchaudio -
+pip install torch-scatter --no-binary torch-scatter --no-build-isolation
+
+For installation native to ARM64. 
+In this case, additionally loading of checkpoints was necessary to be modified in utils.py 
+From:
+`checkpoint = torch.load(resume, map_location=device)`
+To:
+`checkpoint = torch.load(resume, map_location=device, weights_only=False)`
+
+Please consult torch_scatter documentation for specific use cases.
 
 # Running tasks
 ## Arguments
