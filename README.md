@@ -65,14 +65,20 @@ pip install -r requirements.txt
 ## NOTE
 Installation of torch-scatter might be machine-dependent. 
 Specifically, we required running 
+
 pip install torch torchvision torchaudio -
+
 pip install torch-scatter --no-binary torch-scatter --no-build-isolation
 
 For installation native to ARM64. 
 In this case, additionally loading of checkpoints was necessary to be modified in utils.py 
+
 From:
+
 `checkpoint = torch.load(resume, map_location=device)`
+
 To:
+
 `checkpoint = torch.load(resume, map_location=device, weights_only=False)`
 
 Please consult torch_scatter documentation for specific use cases.
@@ -80,12 +86,16 @@ Please consult torch_scatter documentation for specific use cases.
 # Running tasks
 ## Arguments
 In the file workspace.py there is a function called input_parser() which is generating the arguments for task initialisation with default values
+
 args = input_parser()
+
 This can be used to run tasks from Terminal, as designed in the original paper
 
 We use an alternative approach, namely running tasks from an IDE
 Firstly, args are converted into a Python dict by:
+
 args = vars(args)
+
 This dict can be printed if it’s necessary to see the argument keywords and default values, alternatively the input_parcer() can be examined;
 
 The args can be modified with custom values using arguments’ names as dict keys
@@ -110,17 +120,25 @@ args['elem_fea_len'] = int - specifies dimension of the feature/element embeddin
 args[‘append_after] = str - specifies whether loadings are appended to the element embeddings before (‘E’) or after (‘C’) message passing operations. Makes a difference only for model type ReacRoost, for others it’s always ‘C’;
 
 args['dim_red'] = bool - specifies, if learnable dimension reduction is performed on features/embeddings before message passing and/or predictive model;
+
 if True elem_fea_len must be < elem_emb_len, 
+
 if True, in case model_class is ReacCryNet, elem_fea_len corresponds to the embedding length BEFORE appending loadings, i.e. the dimension of feature used as input of final predictive model is elem_fea_len + 2;
+
 if True, in case model_class is ReacElemNet, elem_fea_len corresponds to embedding length BEFORE appending loadings, i.e. the dimension of feature used as input of final predictive model is elem_fea_len + 2;
+
 if True, in case model_class is ReacRoost AND append_after = ‘C’ elem_fea_len corresponds to embedding length BEFORE appending the loadings, but AFTER appending the atomic fraction (weight), i.e. the dimension of feature after the dimension reduction step is elem_fea_len -1, the dimension of feature after appending the atomic fraction (weight) and in the message passing section is elem_fea_len, and eventually the dimension of feature used as input of final predictive model is elem_fea_len + 2
+
 if True, in case model_class is ReacRoost AND append_after = ‘E’ elem_fea_len corresponds to embedding length AFTER appending  BOTH the loadings the atomic fractions (weights), i.e. the dimension of feature after the dimension reduction step is elem_fea_len - 3, the dimension of feature after appending both the atomic fraction (weight) and the loadings and consequently in the message passing section is elem_fea_len, and eventually the dimension of feature used as input of final predictive model is elem_fea_len
+
 if False, in case model_class is ReacRoost AND append_after = ‘C’ elem_fea_len corresponds to the original embedding length, i.e. the dimension of feature used as input of final predictive model is elem_fea_len + 3 (two loadings + one atomic fraction (weight))
+
 if False, in case model_class is ReacRoost AND append_after = ‘E’ elem_fea_len corresponds to the original embedding length, i.e. the dimension of feature used as input of final predictive model is elem_fea_len + 3 (two loadings + one atomic fraction (weight))
 
 # Running
 The tasks are run by calling main(**args) in the ***workspace.py***.
 A single train/test split run or an evaluation of a preretrained on an independent test set is done by a single function call (see #Running a task on a single train/test split in ***workspace.py***). The test results are saved in the Results directory.
+
 A k-fold cross-validation task is run in a loop of k iterations (see #Running a cross-validation task in ***workspace.py***). Before running, k train test splits of data must be created, which can be done using script ***create_folds.py***. The model parameters and the path to the directory with the splits (folds) are specified before looping. In the loop, the train/test splits and model names are alternated at each iteration and the results are saved in the Results folder. The results can be analysed using the ***analyse_CV.py*** script. NOTE the Results are not necessarily overwritten, so before analysing cross-validation results, make sure, the folder contains only the necessary files with the results.
 
 # Remarks
