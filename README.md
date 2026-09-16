@@ -1,7 +1,7 @@
 **Authors:** Alexander A. Korotkevich, Noushine Shahidzadeh, Sander Woutersen, Zuzanna M. Czarnobil, Paul Tinnemans, Hugo Meekes, and Alberto
 Pérez de Alba Ortíz
 
-**Preprint:** https://doi.org/10.26434/chemrxiv-2025-1814n 
+**Paper** https://www.nature.com/articles/s43246-026-01200-2
 
 
 # Data
